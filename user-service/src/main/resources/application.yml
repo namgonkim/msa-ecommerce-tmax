@@ -28,3 +28,8 @@ eureka:
 # key value system
 greeting:
   message: Welcome to the simple E-commerce.
+
+# jwt token
+token:
+  expiration_time: 864000000
+  secret: user_token

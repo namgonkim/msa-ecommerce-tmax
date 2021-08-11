@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 @RestController
@@ -58,7 +59,11 @@ public class UserController {
 
     /* 전체 사용자 목록 조회 */
     @GetMapping("/users")
-    public ResponseEntity<List<ResponseUser>> getUsers() {
+    public ResponseEntity<List<ResponseUser>> getUsers(HttpServletRequest request) {
+        // 헤더에 어떤 정보가 있는지
+        Enumeration<String> em = request.getHeaderNames();
+        request.getHeader("token"); // 헤더에 포함된 토큰을 가져옴
+
         Iterable<UserEntity> usersList = userService.getUserByAll();
         List<ResponseUser> responseUsersList = new ArrayList<>();
 
