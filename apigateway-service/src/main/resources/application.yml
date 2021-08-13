@@ -4,6 +4,12 @@ server:
 spring:
   application:
     name: apigateway-service
+  # api , config server 통신
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   cloud:
     gateway:
       routes:
@@ -22,6 +28,16 @@ spring:
           filters:
             - AddRequestHeader=second-header, Namgon-second
             - AddResponseHeader=second-response, Hello
+
+        # user service actuator
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
 
         # user-login service
         - id: user-service
@@ -77,7 +93,8 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka
-
-# jwt token
-token:
-  secret: user_token
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, refresh, health, beans, httptrace, busrefresh
